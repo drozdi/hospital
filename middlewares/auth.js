@@ -13,7 +13,7 @@ function auth(req, res, next) {
 
 		next()
 	} catch (e) {
-		res.redirect('/')
+		res.cookie('token', '', { httpOnly: true })
 	}
 }
 

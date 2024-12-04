@@ -17,7 +17,7 @@
 	</head>
 
 	<body>
-		<%- include('./partials/user-header') %>
+		<%- include('./partials/'+(isLogin? 'user' :'guest')+'-header') %>
 		<section class="h-100">
 			<div class="container py-5 h-100">
 				<h1><%= title %></h1>

@@ -9,7 +9,7 @@ const {
 	removeStatement,
 	updateStatement,
 } = require('./statement.controller')
-const { loginUser } = require('./users.controller')
+const { loginUser, addUser } = require('./users.controller')
 const auth = require('./middlewares/auth')
 
 const port = 3000
@@ -37,7 +37,6 @@ app.get('/login', async (req, res) => {
 app.post('/login', async (req, res) => {
 	try {
 		const token = await loginUser(req.body.email, req.body.password)
-
 		res.cookie('token', token, { httpOnly: true })
 
 		res.redirect('/')
@@ -52,16 +51,15 @@ app.post('/login', async (req, res) => {
 app.get('/logout', (req, res) => {
 	res.cookie('token', '', { httpOnly: true })
 
-	res.redirect('/login')
+	res.redirect('/')
 })
 
-//app.use(auth)
+app.use(auth)
 
 app.get('/', async (req, res) => {
 	res.render('index', {
 		title: 'Запись к врачу',
-		//notes: await getNotes(),
-		//userEmail: req.user.email,
+		isLogin: !!req.user?.email,
 		created: false,
 		error: false,
 	})
@@ -71,18 +69,18 @@ app.post('/', async (req, res) => {
 	try {
 		await addStatement(req.body)
 		res.render('index', {
-			title: 'Express App',
-			userEmail: req.user.email,
+			title: 'Запись к врачу',
+			isLogin: !!req.user?.email,
 			created: true,
 			error: false,
 		})
 	} catch (e) {
 		console.error('Creation error', e)
 		res.render('index', {
-			title: 'Express App',
-			userEmail: req.user.email,
+			title: 'Запись к врачу',
+			isLogin: !!req.user?.email,
 			created: false,
-			error: true,
+			error: e.message``,
 		})
 	}
 })
