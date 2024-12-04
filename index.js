@@ -80,9 +80,22 @@ app.post('/', async (req, res) => {
 			title: 'Запись к врачу',
 			isLogin: !!req.user?.email,
 			created: false,
-			error: e.message``,
+			error: e.message,
 		})
 	}
+})
+
+app.get('/statements', async (req, res) => {
+	if (!req.user?.email) {
+		res.redirect('/')
+	}
+	const page = parseInt(req.query.page, 10) || 1
+	const limit = parseInt(req.query.limit, 10) || 10
+	console.log(await getStatements(page, limit))
+	res.render('statements', {
+		title: 'Заявки',
+		...(await getStatements(page, limit)),
+	})
 })
 
 mongoose

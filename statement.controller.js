@@ -7,10 +7,14 @@ async function addStatement(statementData) {
 	console.log(chalk.bgGreen('Statement was added!'))
 }
 
-async function getStatements() {
-	const statements = await Statement.find()
+async function getStatements(page, limit) {
+	const totalItems = await Statement.countDocuments({})
+	const totalPages = Math.ceil(totalItems / limit)
 
-	return statements
+	const offset = (page - 1) * limit
+	const statements = await Statement.find().skip(offset).limit(limit).exec()
+
+	return { totalItems, page, totalPages, statements }
 }
 
 async function removeStatement(id) {
