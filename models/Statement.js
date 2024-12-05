@@ -14,7 +14,7 @@ const StatementSchema = mongoose.Schema({
 		type: String,
 		required: true,
 		validate: {
-			validator: validator.isMobilePhone,
+			validator: str => validator.isMobilePhone(str, 'ru-RU'),
 			message: 'Invalid phone',
 		},
 	},

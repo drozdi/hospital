@@ -13,6 +13,11 @@
 			integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
 			crossorigin="anonymous"
 		/>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+		/>
+
 		<title><%= title %></title>
 	</head>
 
@@ -21,12 +26,43 @@
 
 		<div class="container">
 			<h1><%= title %></h1>
-
+			<form action="<%=path+page%>" method="get">
+				<div class="input-group mb-3">
+					<input
+						type="text"
+						name="q"
+						value="<%=q%>"
+						class="form-control"
+						aria-label="Recipient's username"
+						aria-describedby="button-addon2"
+						placeholder="Type to search..."
+					/>
+					<button
+						class="btn btn-outline-secondary"
+						type="submit"
+						id="button-addon2"
+					>
+						Найти
+					</button>
+				</div>
+			</form>
 			<table class="table">
 				<thead>
 					<tr>
-						<th scope="col">Дата отправки</th>
-						<th scope="col">ФИО</th>
+						<th scope="col">
+							Дата отправки
+							<a
+								href="<%=sortedPath+'&sort[date]='+sorting.date%>"
+								class="bi <%=(sort.date == 1? 'bi-chevron-up' : sort.date == -1? 'bi-chevron-down' :'bi-chevron-expand')%> float-end"
+							></a>
+						</th>
+						<th scope="col">
+							ФИО
+							<a
+								href="<%=sortedPath+'&sort[name]='+sorting.name%>"
+								class="bi <%=(sort.name == 1? 'bi-chevron-up' : sort.name == -1? 'bi-chevron-down' :'bi-chevron-expand')%> float-end"
+							></a>
+						</th>
 						<th scope="col">Телефон</th>
 						<th scope="col">Проблема</th>
 					</tr>
@@ -47,17 +83,21 @@
 			<nav aria-label="Page navigation example">
 				<ul class="pagination">
 					<li class="page-item <%=(page === 1? 'disabled': '')%>">
-						<a class="page-link" href="?page=1" aria-label="Previous">
+						<a class="page-link" href="<%=path%>1" aria-label="Previous">
 							<span aria-hidden="true">&laquo;</span>
 						</a>
 					</li>
 					<% for (let i=1; i < totalPages+1; i++) {%>
 					<li class="page-item <%=(page===i?'active': '')%>">
-						<a class="page-link" href="?page=<%=i%>"><%=i%></a>
+						<a class="page-link" href="<%=(path+i)%>"><%=i%></a>
 					</li>
 					<% } %>
 					<li class="page-item <%=(page === totalPages? 'disabled': '')%>">
-						<a class="page-link" href="?page=<%=totalPages%>" aria-label="Next">
+						<a
+							class="page-link"
+							href="<%=(path+totalPages)%>"
+							aria-label="Next"
+						>
 							<span aria-hidden="true">&raquo;</span>
 						</a>
 					</li>

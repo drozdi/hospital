@@ -89,12 +89,46 @@ app.get('/statements', async (req, res) => {
 	if (!req.user?.email) {
 		res.redirect('/')
 	}
+	const q = req.query.q || ''
+	const sort = req.query.sort || {}
+	const search = q ? '.*' + q + '.*' : '.*'
+	const filter = {
+		$or: [
+			{
+				name: {
+					$regex: search,
+				},
+			},
+			{
+				description: {
+					$regex: search,
+				},
+			},
+		],
+	}
 	const page = parseInt(req.query.page, 10) || 1
 	const limit = parseInt(req.query.limit, 10) || 10
-	console.log(await getStatements(page, limit))
+	const sorting = {
+		date: sort.date == 1 ? -1 : 1,
+		name: sort.name == 1 ? -1 : 1,
+	}
+	let path = '?q=' + q
+	let sortedPath = '?q=' + q
+
+	Object.entries(sort).forEach(([key, value]) => {
+		path += '&sort[' + key + ']=' + value
+	})
+	path += '&page='
+	sortedPath += '&page=' + page
 	res.render('statements', {
 		title: 'Заявки',
-		...(await getStatements(page, limit)),
+		path,
+		curentPath: path + page,
+		sortedPath,
+		sort,
+		sorting,
+		q,
+		...(await getStatements(filter, sort, page, limit)),
 	})
 })
 
